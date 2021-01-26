@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoSqlMongo", "NoSqlMongo\NoSqlMongo.csproj", "{746B6D38-DF6D-4CB0-A451-C67B4DA9511B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{746B6D38-DF6D-4CB0-A451-C67B4DA9511B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{746B6D38-DF6D-4CB0-A451-C67B4DA9511B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{746B6D38-DF6D-4CB0-A451-C67B4DA9511B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{746B6D38-DF6D-4CB0-A451-C67B4DA9511B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F829C3A7-77F1-447C-B5F1-AA3F692B7B5F}
+	EndGlobalSection
+EndGlobal
