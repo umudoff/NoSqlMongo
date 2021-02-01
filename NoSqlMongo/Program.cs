@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +62,36 @@ namespace NoSqlMongo
             {
                 //   Console.WriteLine(r.Name + " " + r.Author);
             }
+          
 
+            var ft3 = Builders<Book>.Filter;
+             var upd=collection.UpdateMany("{}", "{$inc: { Count: 1} }");
+       
+            foreach (var r in collection.Find(new BsonDocument()).ToList())
+            {
+                 //  Console.WriteLine(r.Name + " " + r.Count);
+            }
+
+
+            
+            collection.UpdateMany(b => b.Genre.Contains("fantasy"), "{$addToSet: {Genre: \"favority\"} }");
+            
+            foreach (var r in collection.Find(new BsonDocument()).ToList())
+            {
+                // Console.Write(r.Name + " " );
+                foreach(var t in r.Genre)
+                {
+                 //   Console.Write(t+" ");
+                }
+                Console.WriteLine();
+            }
+
+            
+            var ft8 = Builders<Book>.Filter.Lt("Count", 3);
+            collection.DeleteMany(ft8);
+    
+            var r1 = collection.DeleteMany(FilterDefinition<Book>.Empty);   //DeleteMany("{}");
+            
 
             Console.ReadLine();
         }
