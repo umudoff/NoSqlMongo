@@ -12,88 +12,48 @@ namespace NoSqlMongo
     {
         static void Main(string[] args)
         {
-            var client = new MongoClient("mongodb://localhost:27017");
-            client.DropDatabase("BookLibrary");
-            var database = client.GetDatabase("BookLibrary");
+            BookRepository repo = new BookRepository("BookLibrary", "Books");
+            UIService service = new UIService(repo);
+            service.InitialiseLibrary();
+            List<Book> books;
+            books = service.GetBooksGtOne();
+            PrintBook(books);
+            Console.WriteLine(service.CountBooksGtOne(books));
+            var maxBook = service.GetBookMaxCount();
+            PrintBook(maxBook);
+            var minBook = service.GetBookMinCount();
+            PrintBook(minBook);
+            service.GetDistinctAuthors();
+            service.GetBookEmptyAuthor();
+            service.IncrementBookCount();
+            service.AddFavoriteGenre();
+            var result = service.DeleteLtCount();
+            PrintBook(result);
 
-            string targetCollection = "Books";
+            Console.ReadLine();
+        }
 
-
-            var collection = database.GetCollection<Book>(targetCollection);
-
-            Book[] books = new Book[]{ new Book { Name = "Hobbit", Author = "Tolkien", Count = 5, Genre = new string[] { "fantasy" }, Year = 2014 },
-             new Book { Name= "Lord of the rings", Author= "Tolkien", Count=3, Genre=new string[] { "fantasy" }, Year=2015 },
-             new Book { Name= "Kolobok", Author="", Count=10, Genre=new string[] { "kids" }, Year=2000},
-             new Book { Name="Repka",Author="", Count=11, Genre=new string[] { "kids"}, Year=2000},
-             new Book { Name= "Dyadya Stiopa", Author= "Mihalkov", Count=1, Genre=new string[] {"kids"}, Year=2001}};
-
-            collection.InsertMany(books);
-
-            var ft1 = Builders<Book>.Filter.Gt("Count", 1);
-
-            var res1 = collection.Find(ft1).Sort("{Name:1}").Limit(3).ToList();
-            foreach (var r in res1)
+        public static void PrintBook(Book book)
+        {
+            Console.Write(book.Author + " " + book.Count + " " + book.Name + " ");
+            foreach (var t in book.Genre)
             {
-                //  Console.WriteLine(r.Name+" "+ r.Count);
-
+                Console.Write(t + " ");
             }
+            Console.WriteLine();
+        }
 
-            // Console.WriteLine(res1.Sum(b=>b.Count));
-
-
-
-            var maxResult = collection.Find(FilterDefinition<Book>.Empty).Sort("{Count:-1}").First();
-            // Console.WriteLine("Max:" + maxResult.Count);
-            var minResult = collection.Find(FilterDefinition<Book>.Empty).Sort("{Count:1}").First();
-            //Console.WriteLine("Min: "+ minResult.Count);
-
-
-
-            var distinctAuthors = collection.Find(FilterDefinition<Book>.Empty).ToList().Where(b => b.Author != "").GroupBy(b => b.Author).Where(grp => grp.Count() == 1).Select(grp => grp.Key);
-            foreach (var r in distinctAuthors)
+        public static void PrintBook(List<Book> books)
+        {
+            foreach (var r in books)
             {
-                // Console.WriteLine(r);
-            }
-
-
-            var ft2 = Builders<Book>.Filter.Eq("Author", "");
-            var res2 = collection.Find(ft2).ToList();
-            foreach (var r in res2)
-            {
-                //   Console.WriteLine(r.Name + " " + r.Author);
-            }
-          
-
-            var ft3 = Builders<Book>.Filter;
-             var upd=collection.UpdateMany("{}", "{$inc: { Count: 1} }");
-       
-            foreach (var r in collection.Find(new BsonDocument()).ToList())
-            {
-                 //  Console.WriteLine(r.Name + " " + r.Count);
-            }
-
-
-            
-            collection.UpdateMany(b => b.Genre.Contains("fantasy"), "{$addToSet: {Genre: \"favority\"} }");
-            
-            foreach (var r in collection.Find(new BsonDocument()).ToList())
-            {
-                // Console.Write(r.Name + " " );
-                foreach(var t in r.Genre)
+                Console.Write(r.Name + " " + r.Count + " " + r.Author + " ");
+                foreach (var t in r.Genre)
                 {
-                 //   Console.Write(t+" ");
+                    Console.Write(t + " ");
                 }
                 Console.WriteLine();
             }
-
-            
-            var ft8 = Builders<Book>.Filter.Lt("Count", 3);
-            collection.DeleteMany(ft8);
-    
-            var r1 = collection.DeleteMany(FilterDefinition<Book>.Empty);   //DeleteMany("{}");
-            
-
-            Console.ReadLine();
         }
     }
 }
